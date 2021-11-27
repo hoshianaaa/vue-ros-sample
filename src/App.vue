@@ -11,13 +11,33 @@ const ros =  new ROSLIB.Ros({
     url: 'ws://localhost:9090'
 });
 
+var cmdVel = new ROSLIB.Topic({
+    ros : ros,
+    name : '/cmd_vel',
+    messageType : 'geometry_msgs/Twist'
+});
+
+var twist = new ROSLIB.Message({
+    linear : {
+      x : 0.1,
+      y : 0.2,
+      z : 0.3
+    },
+    angular : {
+      x : -0.1,
+      y : -0.2,
+      z : -0.3
+    }
+});
+
+cmdVel.publish(twist);
+
 export default {
   name: 'App',
   components: {
     HelloWorld
   },
 
-  // *** 追加 ここから *** //
   mounted() {
     this.init();
   },
@@ -33,7 +53,6 @@ export default {
         console.log("connection to websocket server closed.");
       });
     }
-    // *** 追加 ここまで *** //
   }
 }
 </script>
