@@ -45,6 +45,24 @@ listener.subscribe(function(message) {
     listener.unsubscribe();
 });
 
+// service client
+var addTwoIntsClient = new ROSLIB.Service({
+    ros : ros,
+    name : '/add_two_ints',
+    serviceType : 'rospy_tutorials/AddTwoInts'
+});
+
+var request = new ROSLIB.ServiceRequest({
+    a : 1,
+    b : 2
+});
+
+addTwoIntsClient.callService(request, function(result) {
+    console.log('Result for service call on ' + addTwoIntsClient.name + ': ' + result.sum);
+});
+
+
+
 
 export default {
   name: 'App',
