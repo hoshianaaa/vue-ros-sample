@@ -45,7 +45,7 @@ listener.subscribe(function(message) {
     listener.unsubscribe();
 });
 
-// service client
+// Service client
 var addTwoIntsClient = new ROSLIB.Service({
     ros : ros,
     name : '/add_two_ints',
@@ -57,12 +57,48 @@ var request = new ROSLIB.ServiceRequest({
     b : 2
 });
 
+// Service server
 addTwoIntsClient.callService(request, function(result) {
     console.log('Result for service call on ' + addTwoIntsClient.name + ': ' + result.sum);
 });
 
+var setBoolServer = new ROSLIB.Service({
+    ros : ros,
+    name : '/set_bool',
+    serviceType : 'std_srvs/SetBool'
+});
 
+setBoolServer.advertise(function(request, response) {
+    console.log('Received service request on ' + setBoolServer.name + ': ' + request.data);
+    response['success'] = true;
+    response['message'] = 'Set successfully';
+    return true;
+});
 
+// Param
+ros.getParams(function(params) {
+    console.log(params);
+});
+
+var maxVelX = new ROSLIB.Param({
+    ros : ros,
+    name : 'max_vel_y'
+});
+
+maxVelX.set(0.8);
+maxVelX.get(function(value) {
+    console.log('MAX VAL: ' + value);
+});
+
+var favoriteColor = new ROSLIB.Param({
+    ros : ros,
+    name : 'favorite_color'
+});
+
+favoriteColor.set('red');
+favoriteColor.get(function(value) {
+    console.log('My robot\'s favorite color is ' + value);
+});
 
 export default {
   name: 'App',
