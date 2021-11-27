@@ -4,13 +4,14 @@
 </template>
 
 <script>
-import ROSLIB from "roslib" // 追加
+import ROSLIB from "roslib"
 import HelloWorld from './components/HelloWorld.vue'
 
 const ros =  new ROSLIB.Ros({
     url: 'ws://localhost:9090'
 });
 
+// publisher
 var cmdVel = new ROSLIB.Topic({
     ros : ros,
     name : '/cmd_vel',
@@ -31,6 +32,19 @@ var twist = new ROSLIB.Message({
 });
 
 cmdVel.publish(twist);
+
+// listener
+var listener = new ROSLIB.Topic({
+    ros : ros,
+    name : '/listener',
+    messageType : 'std_msgs/String'
+});
+
+listener.subscribe(function(message) {
+    console.log('Received message on ' + listener.name + ': ' + message.data);
+    listener.unsubscribe();
+});
+
 
 export default {
   name: 'App',
